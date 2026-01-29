@@ -25,6 +25,7 @@ function AppContent() {
   return (
     <AppLayout
       breadcrumbs={<BreadcrumbGroup items={getBreadcrumbs()} />}
+      navigationOpen={false}
       navigation={
         <SideNavigation
           header={{ text: 'OpenSearch Ingestion', href: '/' }}

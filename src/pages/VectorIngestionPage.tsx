@@ -43,7 +43,7 @@ export default function VectorIngestionPage() {
             },
             {
               id: 'ml-inference',
-              label: 'ML Inference',
+              label: 'ML inference jobs',
               content: <MLInferenceTab />,
             },
           ]}

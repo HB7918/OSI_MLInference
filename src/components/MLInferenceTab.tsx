@@ -15,10 +15,10 @@ interface InferenceJob {
   id: string;
   name: string;
   modelId: string;
-  status: 'Running' | 'Stopped' | 'Failed' | 'Deploying';
+  status: 'Active' | 'Stopped' | 'Failed';
   createdOn: string;
-  endpoint: string;
-  latency: string;
+  pipeline: string;
+  domain: string;
 }
 
 const mockInferenceJobs: InferenceJob[] = [
@@ -26,28 +26,19 @@ const mockInferenceJobs: InferenceJob[] = [
     id: '1',
     name: 'text-embedding-inference',
     modelId: 'amazon.titan-embed-text-v2',
-    status: 'Running',
+    status: 'Active',
     createdOn: 'July 18, 2025, 02:30 pm',
-    endpoint: 'ml-inference-endpoint-1752845370',
-    latency: '45ms',
+    pipeline: 'ml-inference-pipeline-1752845370',
+    domain: 'test25161',
   },
   {
     id: '2',
     name: 'semantic-search-model',
     modelId: 'cohere.embed-english-v3',
-    status: 'Running',
+    status: 'Active',
     createdOn: 'July 17, 2025, 09:15 am',
-    endpoint: 'ml-inference-endpoint-1752765890',
-    latency: '62ms',
-  },
-  {
-    id: '3',
-    name: 'multimodal-embedding',
-    modelId: 'amazon.titan-embed-image-v1',
-    status: 'Deploying',
-    createdOn: 'July 18, 2025, 04:00 pm',
-    endpoint: 'ml-inference-endpoint-1752850000',
-    latency: '-',
+    pipeline: 'ml-inference-pipeline-1752765890',
+    domain: 'dashboard',
   },
 ];
 
@@ -59,14 +50,12 @@ export default function MLInferenceTab() {
 
   const getStatusType = (status: InferenceJob['status']) => {
     switch (status) {
-      case 'Running':
+      case 'Active':
         return 'success';
       case 'Stopped':
         return 'stopped';
       case 'Failed':
         return 'error';
-      case 'Deploying':
-        return 'in-progress';
       default:
         return 'info';
     }
@@ -80,10 +69,10 @@ export default function MLInferenceTab() {
         onSelectionChange={({ detail }) => setSelectedItems(detail.selectedItems as InferenceJob[])}
         columnDefinitions={[
           {
-            id: 'name',
-            header: 'Inference job name',
-            cell: (item) => <Link href="#">{item.name}</Link>,
-            sortingField: 'name',
+            id: 'createdOn',
+            header: 'Job created on',
+            cell: (item) => item.createdOn,
+            sortingField: 'createdOn',
           },
           {
             id: 'status',
@@ -95,20 +84,14 @@ export default function MLInferenceTab() {
             ),
           },
           {
-            id: 'createdOn',
-            header: 'Created on',
-            cell: (item) => item.createdOn,
-            sortingField: 'createdOn',
+            id: 'pipeline',
+            header: 'Ingestion pipeline',
+            cell: (item) => <Link href="#">{item.pipeline}</Link>,
           },
           {
-            id: 'endpoint',
-            header: 'Inference endpoint',
-            cell: (item) => <Link href="#">{item.endpoint}</Link>,
-          },
-          {
-            id: 'latency',
-            header: 'Avg latency',
-            cell: (item) => item.latency,
+            id: 'domain',
+            header: 'OpenSearch domain',
+            cell: (item) => <Link href="#">{item.domain}</Link>,
           },
         ]}
         items={mockInferenceJobs}
@@ -118,8 +101,7 @@ export default function MLInferenceTab() {
             counter={`(${mockInferenceJobs.length})`}
             actions={
               <SpaceBetween direction="horizontal" size="xs">
-                <Button iconName="refresh" variant="icon" ariaLabel="Refresh" />
-                <Button disabled={selectedItems.length === 0}>Stop</Button>
+                <Button iconName="refresh" variant="normal" ariaLabel="Refresh" />
                 <Button disabled={selectedItems.length === 0}>Delete</Button>
                 <Button variant="primary" onClick={() => navigate('/create-inference-job')}>Create inference job</Button>
               </SpaceBetween>
@@ -148,9 +130,8 @@ export default function MLInferenceTab() {
               onChange={({ detail }) => setStatusFilter(detail.selectedOption as { label: string; value: string } | null)}
               options={[
                 { label: 'Any status', value: 'any' },
-                { label: 'Running', value: 'running' },
+                { label: 'Active', value: 'active' },
                 { label: 'Stopped', value: 'stopped' },
-                { label: 'Deploying', value: 'deploying' },
                 { label: 'Failed', value: 'failed' },
               ]}
             />
