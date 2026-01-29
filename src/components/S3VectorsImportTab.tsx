@@ -116,6 +116,7 @@ export default function S3VectorsImportTab() {
               value={null}
               onChange={() => {}}
               relativeOptions={[]}
+              isValidRange={() => ({ valid: true })}
               i18nStrings={{
                 todayAriaLabel: 'Today',
                 nextMonthAriaLabel: 'Next month',

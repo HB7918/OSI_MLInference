@@ -10,7 +10,6 @@ import StatusIndicator from '@cloudscape-design/components/status-indicator';
 import Input from '@cloudscape-design/components/input';
 import Select from '@cloudscape-design/components/select';
 import Pagination from '@cloudscape-design/components/pagination';
-import Badge from '@cloudscape-design/components/badge';
 
 interface InferenceJob {
   id: string;
