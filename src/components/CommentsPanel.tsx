@@ -614,7 +614,7 @@ function CommentsPanel({ screenName }: CommentsPanelProps) {
           {commentMode ? 'Click to place pin' : 'Add comment'}
         </button>
 
-        {comments.length > 0 && (
+        {comments.length > 0 && !showPins && (
           <button
             onClick={() => {
               setShowPins(true);
@@ -637,6 +637,32 @@ function CommentsPanel({ screenName }: CommentsPanelProps) {
           >
             <span style={{ fontSize: '14px' }}>💬</span>
             All comments ({comments.length})
+          </button>
+        )}
+
+        {showPins && (
+          <button
+            onClick={() => {
+              setShowPins(false);
+              setExpandedComment(null);
+            }}
+            style={{
+              backgroundColor: '#ffffff',
+              border: 'none',
+              padding: '10px 16px',
+              borderRadius: '20px',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              fontSize: '13px',
+              fontWeight: '500',
+              color: '#16191f'
+            }}
+          >
+            <span style={{ fontSize: '14px' }}>👁️</span>
+            Hide comments
           </button>
         )}
       </div>
