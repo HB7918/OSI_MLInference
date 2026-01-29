@@ -4,7 +4,7 @@ import '@cloudscape-design/global-styles/index.css';
 import './styles/custom.css';
 import App from './App';
 import { Amplify } from 'aws-amplify';
-import awsconfig from './aws-exports.js';
+import awsconfig from './aws-exports';
 
 Amplify.configure(awsconfig);
 

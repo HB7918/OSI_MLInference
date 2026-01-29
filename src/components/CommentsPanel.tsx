@@ -22,7 +22,7 @@ interface CommentsPanelProps {
 function CommentsPanel({ screenName }: CommentsPanelProps) {
   const [comments, setComments] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState('');
-  const [loading, setLoading] = useState(true);
+  const [_loading, setLoading] = useState(true);
   const [commentMode, setCommentMode] = useState(false);
   const [pendingPin, setPendingPin] = useState<{ x: number; y: number } | null>(null);
   const [hoveredPin, setHoveredPin] = useState<string | null>(null);
@@ -34,10 +34,12 @@ function CommentsPanel({ screenName }: CommentsPanelProps) {
   useEffect(() => {
     fetchComments();
 
-    const subscription = client.graphql({
+    const sub = client.graphql({
       query: subscriptions.onCreateComment,
       variables: { screenname: screenName }
-    }).subscribe({
+    }) as any;
+    
+    const subscription = sub.subscribe({
       next: ({ data }: any) => {
         const newComment = data.onCreateComment;
         setComments(prev => [newComment, ...prev]);
