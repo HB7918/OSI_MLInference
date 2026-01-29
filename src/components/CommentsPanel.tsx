@@ -28,8 +28,21 @@ function CommentsPanel({ screenName }: CommentsPanelProps) {
   const [hoveredPin, setHoveredPin] = useState<string | null>(null);
   const [showPins, setShowPins] = useState(true);
   const [expandedComment, setExpandedComment] = useState<string | null>(null);
+  const [showSidebar, setShowSidebar] = useState(false);
   const textareaRef = useRef<HTMLDivElement>(null);
   const storageKey = `comments-${screenName}`;
+
+  const scrollToComment = (comment: Comment) => {
+    if (comment.pinX && comment.pinY) {
+      window.scrollTo({
+        left: comment.pinX - window.innerWidth / 2,
+        top: comment.pinY - window.innerHeight / 2,
+        behavior: 'smooth'
+      });
+      setExpandedComment(comment.timestamp);
+      setShowSidebar(false);
+    }
+  };
 
   useEffect(() => {
     fetchComments();
@@ -421,6 +434,145 @@ function CommentsPanel({ screenName }: CommentsPanelProps) {
         </div>
       ))}
 
+      {/* Comments Sidebar */}
+      <div
+        data-comments-panel
+        style={{
+          position: 'fixed',
+          top: 0,
+          right: showSidebar ? 0 : '-360px',
+          width: '360px',
+          height: '100vh',
+          backgroundColor: 'white',
+          boxShadow: showSidebar ? '-4px 0 20px rgba(0,0,0,0.15)' : 'none',
+          zIndex: 1004,
+          transition: 'right 0.3s ease',
+          display: 'flex',
+          flexDirection: 'column'
+        }}
+      >
+        {/* Sidebar Header */}
+        <div style={{
+          padding: '16px 20px',
+          borderBottom: '1px solid #eee',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center'
+        }}>
+          <div>
+            <div style={{ fontWeight: '600', fontSize: '16px', color: '#16191f' }}>Comments</div>
+            <div style={{ fontSize: '12px', color: '#687078', marginTop: '2px' }}>
+              {comments.length} comment{comments.length !== 1 ? 's' : ''} on this screen
+            </div>
+          </div>
+          <button
+            onClick={() => setShowSidebar(false)}
+            style={{
+              border: 'none',
+              background: 'none',
+              cursor: 'pointer',
+              fontSize: '20px',
+              color: '#687078',
+              padding: '4px',
+              lineHeight: '1'
+            }}
+          >
+            ×
+          </button>
+        </div>
+
+        {/* Comments List */}
+        <div style={{
+          flex: 1,
+          overflowY: 'auto',
+          padding: '12px'
+        }}>
+          {comments.length === 0 ? (
+            <div style={{
+              textAlign: 'center',
+              padding: '40px 20px',
+              color: '#687078'
+            }}>
+              <div style={{ fontSize: '32px', marginBottom: '12px' }}>💬</div>
+              <div style={{ fontSize: '14px' }}>No comments yet</div>
+              <div style={{ fontSize: '12px', marginTop: '4px' }}>Click "Add comment" to get started</div>
+            </div>
+          ) : (
+            comments.map((comment) => (
+              <div
+                key={comment.timestamp}
+                onClick={() => scrollToComment(comment)}
+                style={{
+                  padding: '12px',
+                  marginBottom: '8px',
+                  backgroundColor: expandedComment === comment.timestamp ? '#f0f7ff' : '#fafafa',
+                  borderRadius: '8px',
+                  cursor: 'pointer',
+                  border: expandedComment === comment.timestamp ? '1px solid #0972d3' : '1px solid transparent',
+                  transition: 'all 0.2s'
+                }}
+                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = expandedComment === comment.timestamp ? '#f0f7ff' : '#f0f0f0')}
+                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = expandedComment === comment.timestamp ? '#f0f7ff' : '#fafafa')}
+              >
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
+                  {/* Pin number badge */}
+                  {comment.pinX && comment.pinY && (
+                    <div style={{
+                      width: '24px',
+                      height: '24px',
+                      backgroundColor: '#0972d3',
+                      borderRadius: '50%',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      flexShrink: 0
+                    }}>
+                      <span style={{ color: 'white', fontSize: '11px', fontWeight: 'bold' }}>
+                        {pinnedComments.findIndex(c => c.timestamp === comment.timestamp) + 1}
+                      </span>
+                    </div>
+                  )}
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+                      <span style={{ fontWeight: '600', fontSize: '13px', color: '#16191f' }}>{comment.author}</span>
+                      <span style={{ fontSize: '11px', color: '#888' }}>{formatTimestamp(comment.timestamp)}</span>
+                    </div>
+                    <div style={{
+                      fontSize: '13px',
+                      color: '#545b64',
+                      lineHeight: '1.4',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      display: '-webkit-box',
+                      WebkitLineClamp: 3,
+                      WebkitBoxOrient: 'vertical'
+                    }}>
+                      {comment.text}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+      </div>
+
+      {/* Sidebar Overlay */}
+      {showSidebar && (
+        <div
+          onClick={() => setShowSidebar(false)}
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0,0,0,0.3)',
+            zIndex: 1003
+          }}
+        />
+      )}
+
       {/* Floating Controls */}
       <div
         data-comments-panel
@@ -481,7 +633,30 @@ function CommentsPanel({ screenName }: CommentsPanelProps) {
             }}
           >
             <span style={{ fontSize: '14px' }}>👁️</span>
-            {showPins ? 'Hide' : `View comments (${pinnedComments.length})`}
+            {showPins ? 'Hide' : `Show pins`}
+          </button>
+        )}
+
+        {comments.length > 0 && (
+          <button
+            onClick={() => setShowSidebar(true)}
+            style={{
+              backgroundColor: '#ffffff',
+              border: 'none',
+              padding: '10px 16px',
+              borderRadius: '20px',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              fontSize: '13px',
+              fontWeight: '500',
+              color: '#16191f'
+            }}
+          >
+            <span style={{ fontSize: '14px' }}>💬</span>
+            All comments ({comments.length})
           </button>
         )}
       </div>
