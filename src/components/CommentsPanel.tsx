@@ -26,7 +26,7 @@ function CommentsPanel({ screenName }: CommentsPanelProps) {
   const [commentMode, setCommentMode] = useState(false);
   const [pendingPin, setPendingPin] = useState<{ x: number; y: number } | null>(null);
   const [hoveredPin, setHoveredPin] = useState<string | null>(null);
-  const [showPins, setShowPins] = useState(true);
+  const [showPins, setShowPins] = useState(false);
   const [expandedComment, setExpandedComment] = useState<string | null>(null);
   const [showSidebar, setShowSidebar] = useState(false);
   const textareaRef = useRef<HTMLDivElement>(null);
