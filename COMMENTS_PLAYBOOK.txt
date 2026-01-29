@@ -408,8 +408,9 @@ function CommentsPanel({ screenName }) {
     const handleClick = (e) => {
       if (e.target.closest('[data-comments-panel]')) return;
       
-      const x = e.clientX;
-      const y = e.clientY;
+      // Use pageX/pageY to get document-relative coordinates (includes scroll offset)
+      const x = e.pageX;
+      const y = e.pageY;
       
       setPendingPin({ x, y });
       setCommentMode(false);
@@ -552,7 +553,7 @@ function CommentsPanel({ screenName }) {
         <div
           data-comments-panel
           style={{
-            position: 'fixed',
+            position: 'absolute',
             left: pendingPin.x,
             top: pendingPin.y,
             zIndex: 1002
@@ -661,7 +662,7 @@ function CommentsPanel({ screenName }) {
           key={comment.timestamp}
           data-comments-panel
           style={{
-            position: 'fixed',
+            position: 'absolute',
             left: comment.pinX - 12,
             top: comment.pinY - 24,
             zIndex: expandedComment === comment.timestamp ? 1002 : 1001
@@ -980,6 +981,11 @@ export const handler = async (event) => {
 ### Pin positions not saving
 - Ensure `pinX` and `pinY` are in your AppSync schema
 - Update the createComment resolver to include pinX and pinY
+
+### Pins move when scrolling
+- Make sure you're using `e.pageX/e.pageY` (not `clientX/clientY`) when capturing click position
+- Use `position: 'absolute'` (not `fixed`) for pin elements
+- `pageX/pageY` captures document-relative coordinates including scroll offset
 
 ### Real-time updates not working
 - Verify subscriptions are enabled in AppSync
