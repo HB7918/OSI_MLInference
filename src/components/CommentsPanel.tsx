@@ -55,8 +55,9 @@ function CommentsPanel({ screenName }: CommentsPanelProps) {
 
     const handleClick = (e: MouseEvent) => {
       if ((e.target as HTMLElement).closest('[data-comments-panel]')) return;
-      const x = e.clientX;
-      const y = e.clientY;
+      // Use pageX/pageY to get document-relative coordinates (includes scroll offset)
+      const x = e.pageX;
+      const y = e.pageY;
       setPendingPin({ x, y });
       setCommentMode(false);
     };
@@ -196,7 +197,7 @@ function CommentsPanel({ screenName }: CommentsPanelProps) {
         <div
           data-comments-panel
           style={{
-            position: 'fixed',
+            position: 'absolute',
             left: pendingPin.x,
             top: pendingPin.y,
             zIndex: 1002
@@ -305,7 +306,7 @@ function CommentsPanel({ screenName }: CommentsPanelProps) {
           key={comment.timestamp}
           data-comments-panel
           style={{
-            position: 'fixed',
+            position: 'absolute',
             left: (comment.pinX || 0) - 12,
             top: (comment.pinY || 0) - 24,
             zIndex: expandedComment === comment.timestamp ? 1002 : 1001
