@@ -614,32 +614,12 @@ function CommentsPanel({ screenName }: CommentsPanelProps) {
           {commentMode ? 'Click to place pin' : 'Add comment'}
         </button>
 
-        {pinnedComments.length > 0 && (
-          <button
-            onClick={() => setShowPins(!showPins)}
-            style={{
-              backgroundColor: '#ffffff',
-              border: 'none',
-              padding: '10px 16px',
-              borderRadius: '20px',
-              boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px',
-              fontSize: '13px',
-              fontWeight: '500',
-              color: '#16191f'
-            }}
-          >
-            <span style={{ fontSize: '14px' }}>👁️</span>
-            {showPins ? 'Hide' : `Show pins`}
-          </button>
-        )}
-
         {comments.length > 0 && (
           <button
-            onClick={() => setShowSidebar(true)}
+            onClick={() => {
+              setShowPins(true);
+              setShowSidebar(true);
+            }}
             style={{
               backgroundColor: '#ffffff',
               border: 'none',
