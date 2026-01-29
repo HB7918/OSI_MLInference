@@ -17,6 +17,7 @@ import Icon from '@cloudscape-design/components/icon';
 import Checkbox from '@cloudscape-design/components/checkbox';
 import DateRangePicker from '@cloudscape-design/components/date-range-picker';
 import Badge from '@cloudscape-design/components/badge';
+import CommentsPanel from '../components/CommentsPanel';
 
 interface S3BucketConfig {
   bucketName: string;
@@ -158,6 +159,7 @@ export default function CreateInferenceJobPage() {
   };
 
   return (
+    <>
     <Form
       actions={
         <SpaceBetween direction="horizontal" size="xs">
@@ -763,5 +765,7 @@ export default function CreateInferenceJobPage() {
         </Container>
       </SpaceBetween>
     </Form>
+      <CommentsPanel screenName="OSI-ML-Inference-Create-Job" />
+    </>
   );
 }

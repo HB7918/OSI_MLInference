@@ -19,4 +19,7 @@ npm-debug.log*
 .env
 .env.local
 .env.*.local
+
+# AWS Config (contains sensitive keys)
+src/aws-exports.js
 node_modules
