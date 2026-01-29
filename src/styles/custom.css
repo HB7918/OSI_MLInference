@@ -1,0 +1,41 @@
+/* Override Cloudscape primary button to orange with black text */
+/* Only target actual buttons, not links */
+button[class*="awsui_variant-primary"],
+button[class*="variant-primary"] {
+  background-color: #ec7211 !important;
+  border-color: #ec7211 !important;
+  color: #000000 !important;
+}
+
+button[class*="awsui_variant-primary"]:hover,
+button[class*="variant-primary"]:hover {
+  background-color: #eb5f07 !important;
+  border-color: #eb5f07 !important;
+  color: #000000 !important;
+}
+
+button[class*="awsui_variant-primary"]:active,
+button[class*="variant-primary"]:active {
+  background-color: #dd6b10 !important;
+  border-color: #dd6b10 !important;
+  color: #000000 !important;
+}
+
+/* Ensure text inside primary buttons is black */
+button[class*="awsui_variant-primary"] span,
+button[class*="variant-primary"] span {
+  color: #000000 !important;
+}
+
+/* Keep links blue - override any orange styling */
+a[class*="awsui_link"],
+[class*="awsui_link"] a,
+a[class*="link"] {
+  color: #0972d3 !important;
+}
+
+a[class*="awsui_link"]:hover,
+[class*="awsui_link"] a:hover,
+a[class*="link"]:hover {
+  color: #033160 !important;
+}
