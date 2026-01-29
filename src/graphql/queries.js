@@ -30,3 +30,19 @@ export const getComment = /* GraphQL */ `
     }
   }
 `;
+
+export const queryCommentsByScreen = /* GraphQL */ `
+  query QueryCommentsByScreen($screenname: String!, $first: Int, $after: String) {
+    queryCommentsByByscreen(screenname: $screenname, first: $first, after: $after) {
+      items {
+        screenname
+        text
+        author
+        timestamp
+        pinX
+        pinY
+      }
+      nextToken
+    }
+  }
+`;
