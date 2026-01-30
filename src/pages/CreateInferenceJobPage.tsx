@@ -195,14 +195,14 @@ export default function CreateInferenceJobPage() {
             </FormField>
 
             <FormField
-              label={<>Data prefix <i>- optional</i></>}
-              description="If your data resides in a prefix within the bucket, provide the prefix path. Leave empty if data is at the root level."
+              label={<>Metadata prefix <i>- optional</i></>}
+              description="Prefix path for metadata files if stored separately from data files."
             >
               <div style={{ width: '450px' }}>
                 <Input
                   value=""
                   onChange={() => {}}
-                  placeholder="e.g., data/input/"
+                  placeholder="e.g., metadata/"
                 />
               </div>
             </FormField>
